@@ -4,11 +4,11 @@
 class Queue {
 	NodePtr headPtr,tailPtr;
 	int size;
-  int total;
 public:
-    void enqueue(int,int);
-    int dequeue();
+    void enqueue(int);
+    //int dequeue();
     int qsize();
+    int qminus();
     Queue();
     ~Queue();
 };
@@ -17,8 +17,39 @@ int Queue::qsize(){
   return size;
 }
 
-void Queue::enqueue(int x,int y){
-  NodePtr new_node= new NODE(x,y);
+int Queue::qminus(){
+    int value=0;
+    if(headPtr!=NULL){
+        NodePtr t=headPtr;
+        t->DeDuration();
+        if(t->get_duration() < 1){
+            headPtr=headPtr->get_next();
+            if(headPtr==NULL) tailPtr=NULL;
+            size--;
+    
+            value=t->get_value();
+            delete t;
+            return value;
+        }else{
+            value=t->get_value();
+            switch(value){
+                case 1: cout<<"@ Thanos Air Strike! | In "; break;
+                case 2: cout<<"@ Thanos Medical Aid | In "; break; 
+                case 3: cout<<"@ Thanos Strengthen! | In "; break; 
+                default: break; //discard
+            }
+            cout<<t->get_duration()<<" Rounds!"<<endl;
+            return 0;
+        }
+    }
+    else{
+        cout<<"@0 No Call Action Activate this round"<<endl;
+        return 0;
+    } 
+}
+
+void Queue::enqueue(int x){
+  NodePtr new_node= new NODE(x);
   if(new_node){ 
     /* Add head and tail for me please */
     /*1. connect & Change tail
@@ -30,23 +61,20 @@ void Queue::enqueue(int x,int y){
   }
 }
 
-int Queue::dequeue(){
+/*int Queue::dequeue(){
   if(headPtr!=NULL){
     NodePtr t=headPtr;
-    int value= t->get_price();
-    /* Add head and tail for me please */
+    int value= t->get_value();
     headPtr=headPtr->get_next();
     if(headPtr==NULL) tailPtr=NULL;
-
     size--;
     
     delete t;
-    total=total+value;
     return value;
   }
   cout<<"Empty queue"<<endl;
   return -1;
-}
+}*/
 
 
 Queue::Queue(){
@@ -55,10 +83,10 @@ Queue::Queue(){
     size=0;    
 }
 Queue::~Queue(){
-    cout<<"Q - CHECHOUT"<<endl;
+    cout<<endl<<endl<<"Q destructing"<<endl; //testing only
     int x;
     while(size>0){
-      x=dequeue();
+      x=qminus();
     }
 }
 

@@ -25,11 +25,16 @@ public:
 	void steal_hp(monster* &m1);
 	void operator++(); // increase the stone;
 	void sort_hp(monster *m[], int n);
+	void Theal(int x){ hp+=x*scaling; }
+	void set_scaling(float x){ scaling+=x; }
 	int get_atk(){
 		return atk;
 	}
 	int get_hp(){
 		return hp;
+	}
+	int get_scaling(){
+		return scaling;
 	}
 };
 

@@ -10,7 +10,10 @@ void target(int,int);
 
 int main(int argc, char* argv[]) {
   Thanos T;
+  Queue q;
     int i,n,j=1;
+    int qaction;
+    int BuffScalingD=0;
     random_device rd;
 
     uniform_int_distribution<> distrib(1, 4);
@@ -68,7 +71,7 @@ int main(int argc, char* argv[]) {
   cout<<"2 steal auto: auto steal HP of the top 5 highest hp heroes"<<endl;
   cout<<"3 steal target: target steal HP of a targeted hero"<<endl;
   cout<<"4 Snap Finger (need 6 stones): half every hero HP"<<endl;
-  cout<<"5 CALL support action (queue)"<<endl;
+  cout<<"5 CALL support action (queue) that take time to cast in order"<<endl;
   cout<<endl<<endl;
   int x,A,LO,Halive,round=1;
 
@@ -86,14 +89,43 @@ int main(int argc, char* argv[]) {
         // inner if is probably not needed, delete later.
         if(m[i]->getHp()>0){
           if(m[i]->getHp()<=10) m[i]->heal();
-          else ;
-          //cout<<left<<setw(15)<<m[i]->getName()<<" attack! | ", T.damaged(m[i]->get_atk());
+          else cout<<left<<setw(15)<<m[i]->getName()<<" attack! | ", T.damaged(m[i]->get_atk());
         }
       }
     }
 
     if(T.get_hp()<=0) break;
     cout<<endl<<"T|------Thanos Turn!------"<<endl<<endl;
+
+    if(BuffScalingD>0){
+      BuffScalingD--;
+      cout<<"@- Buffed Scaling Ran Out!"<<endl;
+    }
+
+    qaction = q.qminus();
+    if(qaction != 0){
+      switch(qaction){
+        case 1:
+          cout<<"@ Thanos called Air Strike!"<<endl<<endl;
+          for(i=0;i<n+5;i++){
+            if(m[i]!=nullptr) m[i]->damaged(5*T.get_scaling());
+          }
+          break;
+        case 2:
+          cout<<"@ Thanos called Medical Aid"<<endl<<endl;
+          T.Theal(30);
+          break;
+        case 3:
+          cout<<"@ Thanos called Strengthen"<<endl<<endl;
+          T.set_scaling(1);
+          BuffScalingD=1;
+          break;
+        default: break;
+        }
+      }
+    
+    cout<<endl;
+
     for(i=0;i<2;i=i){
       cout<<"Input Action: ";
       cin>>A;
@@ -106,16 +138,6 @@ int main(int argc, char* argv[]) {
           if(m[x]!=nullptr)T.punch(m[x]);
           else cout<<"You just punched a corpse!"<<endl;
           cout<<endl;
-          for(j=0;j<n+5;j++){
-            if(m[j]!=nullptr){
-              if(m[j]->getHp()<=0) {
-                cout<<m[j]->getName()<<" just DIED!"<<endl, ++T;
-                Halive--;
-                delete m[j];
-                m[j]=nullptr;
-              } 
-            }
-          }
           i++;
           this_thread::sleep_for(std::chrono::milliseconds(1000));
           break;
@@ -137,9 +159,29 @@ int main(int argc, char* argv[]) {
           T.snap_finger(m,n+5);
           i++;
           break;
+        case 5: //call casting action
+          int CA;
+          cout<<"Call Action available (in rounds):"<<endl;
+          cout<<"1.(3)Air Strike | 2.(2)Medical Aid | 3.(4)Strengthen || Call= ";
+          cin>>CA;
+          cout<<endl;
+          if(CA==1 || CA==2 || CA==3) q.enqueue(CA);
+          else cout<<"@/@ Call not regcognised!!! WOOP WOOP WOOP WOOPSIE"<<endl;
+          i++;
+          break;
         default:
           cout<<"Action not recognised"<<endl, LO=1;
       }
+      for(j=0;j<n+5;j++){
+            if(m[j]!=nullptr){
+              if(m[j]->getHp()<=0) {
+                cout<<m[j]->getName()<<" just DIED!"<<endl, ++T;
+                Halive--;
+                delete m[j];
+                m[j]=nullptr;
+              } 
+            }
+          }
     }
 
     for(i=0;i<n+5;i++){

@@ -16,7 +16,6 @@ public:
 	monster(int=1,int=0,int=0,int=0,int=0, string="default");
 	~monster();
 
-	void action(monster *m, Thanos *T);
 	void operator++(){
 		ss++;
 	}//ss is to memorised if the hero is dead or not
