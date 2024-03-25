@@ -2,6 +2,7 @@
 #define thanos_h
 
 #include "monster.h"
+#include "Queue.h"
 #include <cstdlib> //for rand
 #include <iostream>
 #include <chrono>

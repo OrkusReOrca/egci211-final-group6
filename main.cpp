@@ -68,6 +68,7 @@ int main(int argc, char* argv[]) {
   cout<<"2 steal auto: auto steal HP of the top 5 highest hp heroes"<<endl;
   cout<<"3 steal target: target steal HP of a targeted hero"<<endl;
   cout<<"4 Snap Finger (need 6 stones): half every hero HP"<<endl;
+  cout<<"5 CALL support action (queue)"<<endl;
   cout<<endl<<endl;
   int x,A,LO,Halive,round=1;
 
